@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 public abstract class FileProcesser {
     Object dataToDisplay = null;
     Pane pane = null;
+    boolean someFlag = false;
 
     public Pane getPane() {
         return pane;

@@ -114,21 +114,20 @@ public class MainUIController implements Initializable {
         FileSearchService fileSearchService = new FileSearchService(fileModel);
         fileSearchService.start();
 
-
         recordsTableView.setRowFactory(tv -> {
             TableRow<FileModel> row = new TableRow<FileModel>();
             row.setOnMouseClicked(event -> {
                 if(!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
-                    FileModel fileModel = row.getItem();
-                    filePreviewService = new FilePreviewService(fileModel);
-                    filePreviewService.restart();
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                        FileModel fileModel = row.getItem();
+                        filePreviewService = new FilePreviewService(fileModel);
+                        filePreviewService.restart();
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         previewPane.setContent(filePreviewService.getFileProcesser().getPane());
-                }
+                    }
             });
         return row;});
 

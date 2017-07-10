@@ -46,24 +46,25 @@ public class FileUtility {
     }
 
     public static String reverseFileName(String fileName){
-        System.out.println("fileName = " + fileName);
         String temp = new String("");
         for(int i = fileName.length(); i >= 1; i--) {
             temp += fileName.charAt(i - 1);
         }
-        System.out.println("ReversedString::"+temp);
         return temp;
     }
 
     public static String getFileExtension(FileModel model) {
         String str = reverseFileName(model.getFileName());
-        System.out.println("str = " + str.substring(0,str.indexOf(".")));
         return str.substring(0,str.indexOf("."));
     }
 
     public static FileProcesser getFileProcesser(String fileExtension) {
-        FileExtensions fileExtensions = FileExtensions.AudioType;
-        FileProcesser fileProcesser = fileExtensions.insideFileType(fileExtension);
+        FileProcesser fileProcesser = null;
+        for (FileExtensions extensions : FileExtensions.values()) {
+            if(fileProcesser == null)
+                fileProcesser= extensions.insideFileType(fileExtension);
+
+        }
         return fileProcesser;
     }
 }

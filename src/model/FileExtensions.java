@@ -10,7 +10,7 @@ public enum FileExtensions implements FileExtensionInterface {
     AudioType("MP3") {
         @Override
         public FileProcesser processFileTypeAndGetProcesser() {
-            return new AudioProcesser();
+            return AudioProcesser.getAudioProcesser();
         }
     }, TextType("TXT", "RTF", "SH") {
         @Override
@@ -42,12 +42,10 @@ public enum FileExtensions implements FileExtensionInterface {
 
 
     public FileProcesser insideFileType(String fileExtension) {
-        for (FileExtensions extensions : FileExtensions.values()) {
             for (String str : listOfFileExtensions) {
                 if (str.equalsIgnoreCase(fileExtension))
-                    return extensions.processFileTypeAndGetProcesser();
+                    return processFileTypeAndGetProcesser();
             }
-        }
         return null;
     }
 
