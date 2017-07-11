@@ -17,6 +17,7 @@ public class FilePreviewService extends Service<Void> {
     private boolean isFileProcessed;
     private FileProcesser fileProcesser;
     String fileExtension = "";
+    private boolean rendered = false;
 
 
     public FileProcesser getFileProcesser() {
@@ -49,4 +50,11 @@ public class FilePreviewService extends Service<Void> {
         return isFileProcessed;
     }
 
+    public boolean isRendered() {
+        return rendered;
+    }
+
+    public void setRendered(boolean rendered) {
+        this.rendered = rendered;
+    }
 }

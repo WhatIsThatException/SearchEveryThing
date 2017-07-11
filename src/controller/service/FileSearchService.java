@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static model.FileModel.getData;
+
 /**
  * Created by kpant on 6/26/17.
  */
@@ -59,7 +61,7 @@ public class FileSearchService extends Service<Void> {
                 FileModel fModel = new FileModel(new SimpleStringProperty(file.getName()),
                         new SimpleStringProperty(FileUtility.formatSize(file.length())), new SimpleStringProperty(file.getAbsolutePath()),
                         false);
-                fileModel.getData().add(fModel);
+                getData().add(fModel);
             }
         }
     }
@@ -70,14 +72,14 @@ public class FileSearchService extends Service<Void> {
                 FileModel fModel = new FileModel(new SimpleStringProperty(file.getName()),
                         new SimpleStringProperty(FileUtility.formatSize(file.length())), new SimpleStringProperty(file.getAbsolutePath())
                 ,true);
-                fileModel.getData().add(fModel);
+                getData().add(fModel);
                 listFiles(file);
             } else {
                 FileModel fModel = new FileModel(new SimpleStringProperty(file.getName()),
                         new SimpleStringProperty(FileUtility.formatSize(file.length())), new SimpleStringProperty(file.getAbsolutePath()), false);
                 if(fModel == null) {
                 } else {
-                    fileModel.getData().add(fModel);
+                    getData().add(fModel);
                 }
             }
         }

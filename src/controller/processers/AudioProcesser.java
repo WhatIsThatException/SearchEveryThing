@@ -1,14 +1,12 @@
 package controller.processers;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 
-import static model.MediaStatus.PLAYING;
-import static model.MediaStatus.getMediaStatus;
-import static model.MediaStatus.setMediaStatus;
+import static model.MediaStatus.*;
 
 /**
  * Created by kpant on 7/10/17.
@@ -26,7 +24,7 @@ public final class AudioProcesser extends FileProcesser {
     }
 
     private AudioProcesser() {
-        pane = new Pane();
+        pane = new AnchorPane();
     }
 
     @Override
@@ -45,6 +43,8 @@ public final class AudioProcesser extends FileProcesser {
                 mediaPlayer.stop();
                 playMedia(fileLocation);
                 break;
+            default:
+                System.out.println("Audio in default case");
         }
 //            Runnable playMusic = () -> {
 //                    try {

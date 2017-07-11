@@ -17,15 +17,35 @@ import model.FileModel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by kpant on 6/26/17.
  */
 public class MainUIController implements Initializable {
-    FileModel fileModel = new FileModel("/home/kpant/Videos");
+    FileModel fileModel;
     FileSearchService fileSearchService;
     FolderPreviewService folderPreviewService;
     FilePreviewService filePreviewService;
+
+    private ExecutorService fileSearchExecutor;
+
+    private String[] locationsToSearch = {"/home/kpant/Documents","/home/kpant/Videos"};
+
+    public void init(){
+        fileSearchExecutor = Executors.newFixedThreadPool(locationsToSearch.length,
+                new FolderSearchThreadFactory("parallel"));
+    }
+
+    public void stop() throws InterruptedException {
+        fileSearchExecutor.shutdown();
+        fileSearchExecutor.awaitTermination(3, TimeUnit.SECONDS);
+    }
+
     boolean folderCheckBoxOn = false;
     boolean fileCheckBoxOn = false;
 
@@ -70,7 +90,7 @@ public class MainUIController implements Initializable {
     void searchFieldAction(ActionEvent event) {
         fm.clear();
         String getSearchFieldText = searchField.getText();
-        if (getSearchFieldText != "") {
+        if (!getSearchFieldText.equalsIgnoreCase("")) {
             for (FileModel model : fileModel.getData()) {
                 String fileLocation = model.fileLocationProperty().get();
                 if (fileLocation.toLowerCase().contains(getSearchFieldText.toLowerCase()) || getSearchFieldText.equalsIgnoreCase("")) {
@@ -88,9 +108,6 @@ public class MainUIController implements Initializable {
     }
 
     private void addFileModels(FileModel model) {
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("fileName"));
-        sizeCol.setCellValueFactory(new PropertyValueFactory<>("fileSize"));
-        locationCol.setCellValueFactory(new PropertyValueFactory<>("fileLocation"));
         fm.add(model);
     }
 
@@ -111,32 +128,69 @@ public class MainUIController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FileSearchService fileSearchService = new FileSearchService(fileModel);
-        fileSearchService.start();
+        init();
 
-        recordsTableView.setRowFactory(tv -> {
-            TableRow<FileModel> row = new TableRow<FileModel>();
-            row.setOnMouseClicked(event -> {
-                if(!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
-                        FileModel fileModel = row.getItem();
-                        filePreviewService = new FilePreviewService(fileModel);
-                        filePreviewService.restart();
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        previewPane.setContent(filePreviewService.getFileProcesser().getPane());
-                    }
-            });
-        return row;});
+        for (int i = 0; i < locationsToSearch.length; i++) {
+            fileModel = new FileModel(locationsToSearch[i]);
+            FileSearchService fileSearchService = new FileSearchService(fileModel);
+            fileSearchService.setExecutor(fileSearchExecutor);
+            fileSearchService.start();
+        }
+        try {
+            stop();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         nameCol.setCellValueFactory(new PropertyValueFactory<>("fileName"));
         sizeCol.setCellValueFactory(new PropertyValueFactory<>("fileSize"));
         locationCol.setCellValueFactory(new PropertyValueFactory<>("fileLocation"));
 
         recordsTableView.setItems(fileModel.getData());
+
+        recordsTableView.setRowFactory(tv -> {
+            TableRow<FileModel> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if(!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
+                    FileModel fileModel = row.getItem();
+                    filePreviewService = new FilePreviewService(fileModel);
+                    filePreviewService.restart();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    recordPreviewPane = filePreviewService.getFileProcesser().getPane();
+                    previewPane.setContent(recordPreviewPane);
+
+//                      NOT WORKING
+//                    while(true) {
+//                        if(filePreviewService.isRendered()) {
+//                            previewPane.setContent(filePreviewService.getFileProcesser().getPane());
+//                            break;
+//                        }
+//
+//                    }
+                }
+            });
+            return row;});
     }
 
 
+
+    static class FolderSearchThreadFactory implements ThreadFactory {
+
+        static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final String type;
+        public FolderSearchThreadFactory(String type) {
+            this.type = type;
+        }
+
+        @Override public Thread newThread(Runnable runnable) {
+            Thread thread = new Thread(runnable, "LineService-" + poolNumber.getAndIncrement() + "-thread-" + type);
+            thread.setDaemon(false);
+
+            return thread;
+        }
+    }
 }
