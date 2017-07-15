@@ -36,6 +36,7 @@ public class FilePreviewService extends Service<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
+                System.out.println("FIlePreviewService, createTask() Thread = " + Thread.currentThread().getName());
                fileProcesser = FileUtility.getFileProcesser(fileExtension);
                getFileProcesser().processFile(model.getFileLocation());
                 return null;

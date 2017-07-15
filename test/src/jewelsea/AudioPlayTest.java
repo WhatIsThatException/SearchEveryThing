@@ -1,4 +1,4 @@
-package src;
+package src.jewelsea;
 
 import javafx.application.Application;
 import javafx.scene.media.Media;

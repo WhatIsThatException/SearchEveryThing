@@ -20,6 +20,7 @@ public class FileSearchService extends Service<Void> {
 
     FileModel fileModel;
     private File file;
+    private boolean fileSearchCompleted = false;
 
     private Map<String, FileModel> fileModelMap = new HashMap<>();
 
@@ -83,5 +84,13 @@ public class FileSearchService extends Service<Void> {
                 }
             }
         }
+    }
+
+    public boolean isFileSearchCompleted() {
+        return fileSearchCompleted;
+    }
+
+    public void setFileSearchCompleted(boolean fileSearchCompleted) {
+        this.fileSearchCompleted = fileSearchCompleted;
     }
 }

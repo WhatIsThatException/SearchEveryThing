@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="204.0" prefWidth="348.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="37.0" layoutY="14.0" text="File Information" textAlignment="CENTER">
+         <font>
+            <Font name="Cousine" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="fileNameLabel" layoutX="14.0" layoutY="50.0" text="File Name:" AnchorPane.leftAnchor="14.0" />
+      <Label fx:id="nameOfTheFileLabelAns" layoutX="84.0" layoutY="50.0" text="Name of the File" />
+      <Label fx:id="fileSizeLabel" layoutX="14.0" layoutY="74.0" text="File Size: " AnchorPane.leftAnchor="14.0" />
+      <Label fx:id="fileLocationLabel" layoutX="14.0" layoutY="96.0" text="File Location: " AnchorPane.leftAnchor="14.0" />
+      <Label fx:id="lastModifiedLabel" layoutX="14.0" layoutY="119.0" text="Last Modified:" AnchorPane.leftAnchor="14.0" />
+      <Button fx:id="openFldrLocationBtn" layoutX="5.0" layoutY="150.0" mnemonicParsing="false" onAction="#openFolderLocationAction" text="Open Folder Location" />
+      <Button fx:id="openWithBtn" layoutX="241.0" layoutY="150.0" mnemonicParsing="false" onAction="#openWithAction" text="Open File" />
+      <Label fx:id="sizeOfFileLabelAns" layoutX="84.0" layoutY="74.0" text="Size of file" />
+      <Label fx:id="locationOfFileLabelAns" layoutX="98.0" layoutY="96.0" text="Location of File" />
+      <Label fx:id="modifiedDateLabelAns" layoutX="98.0" layoutY="119.0" text="Modified Date of file" />
+   </children>
+</AnchorPane>

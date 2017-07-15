@@ -33,12 +33,18 @@ public class TextProcesser extends FileProcesser {
             }
             dataToDisplay = txtData;
         }
+        System.out.println("TextProcesser Thread = " + Thread.currentThread().getName());
+
+    }
+
+    @Override
+    public AnchorPane getPane(){
         TextArea txtArea = new TextArea();
         txtArea.setEditable(false);
         txtArea.setText((String) dataToDisplay);
         txtArea.setPrefHeight(778);
         txtArea.setWrapText(true);
-        System.out.println("textArea Data: " + txtArea.getText());
         pane.getChildren().add(txtArea);
+        return pane;
     }
 }

@@ -1,4 +1,4 @@
-package src;
+package src.jewelsea;
 
 /**
  * Created by kpant on 7/10/17.

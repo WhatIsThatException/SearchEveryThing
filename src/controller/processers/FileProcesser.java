@@ -8,6 +8,8 @@ import javafx.scene.layout.AnchorPane;
 public abstract class FileProcesser {
     Object dataToDisplay = null;
     AnchorPane pane = null;
+    static Runnable runnable;
+
     boolean someFlag = false;
 
     public AnchorPane getPane() {

@@ -1,5 +1,6 @@
 package controller;
 
+import controller.service.CacheFileService;
 import controller.service.FilePreviewService;
 import controller.service.FileSearchService;
 import controller.service.FolderPreviewService;
@@ -9,11 +10,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.FileModel;
+import view.ViewFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,10 +35,12 @@ public class MainUIController implements Initializable {
     FileSearchService fileSearchService;
     FolderPreviewService folderPreviewService;
     FilePreviewService filePreviewService;
+    ViewFactory defaultViewFactory = new ViewFactory();
 
+    private MenuItem showRecordInfo = new MenuItem("show Details");
     private ExecutorService fileSearchExecutor;
 
-    private String[] locationsToSearch = {"/home/kpant/Documents","/home/kpant/Videos"};
+    private String[] locationsToSearch = {"/media/kpant/Transcend/","/home/kpant/Videos"};
 
     public void init(){
         fileSearchExecutor = Executors.newFixedThreadPool(locationsToSearch.length,
@@ -90,20 +96,29 @@ public class MainUIController implements Initializable {
     void searchFieldAction(ActionEvent event) {
         fm.clear();
         String getSearchFieldText = searchField.getText();
-        if (!getSearchFieldText.equalsIgnoreCase("")) {
+        if (!getSearchFieldText.equalsIgnoreCase("") && searchFinished == true) {
             for (FileModel model : fileModel.getData()) {
-                String fileLocation = model.fileLocationProperty().get();
-                if (fileLocation.toLowerCase().contains(getSearchFieldText.toLowerCase()) || getSearchFieldText.equalsIgnoreCase("")) {
-                    if(folderCheckBoxOn == true && model.isFolder()) {
-                        addFileModels(model);
-                    } else if((fileCheckBoxOn == true) && !model.isFolder()) {
-                        addFileModels(model);
-                    } else if(folderCheckBoxOn == false && fileCheckBoxOn == false){
-                        addFileModels(model);
-                    }
+                String fileName = model.fileNameProperty().get();
+                if (fileName.toLowerCase().contains(getSearchFieldText.toLowerCase()) || getSearchFieldText.equalsIgnoreCase("")) {
+                    itemFileOrFolder(model);
                 }
             }
             recordsTableView.setItems(fm);
+        }else if(searchFinished == true) {
+            for (FileModel model : fileModel.getData()) {
+                itemFileOrFolder(model);
+            }
+            recordsTableView.setItems(fm);
+        }
+    }
+
+    private void itemFileOrFolder(FileModel model) {
+        if (folderCheckBoxOn == true && model.isFolder()) {
+            addFileModels(model);
+        } else if ((fileCheckBoxOn == true) && !model.isFolder()) {
+            addFileModels(model);
+        } else if (folderCheckBoxOn == false && fileCheckBoxOn == false) {
+            addFileModels(model);
         }
     }
 
@@ -125,7 +140,7 @@ public class MainUIController implements Initializable {
 
     }
 
-
+boolean searchFinished = false;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         init();
@@ -134,7 +149,14 @@ public class MainUIController implements Initializable {
             fileModel = new FileModel(locationsToSearch[i]);
             FileSearchService fileSearchService = new FileSearchService(fileModel);
             fileSearchService.setExecutor(fileSearchExecutor);
+            fileSearchService.setOnSucceeded(e -> {
+                fileSearchService.setFileSearchCompleted(true);
+                searchFinished = true;
+            });
             fileSearchService.start();
+
+            CacheFileService cfs = new CacheFileService(locationsToSearch[i]);
+
         }
         try {
             stop();
@@ -148,35 +170,35 @@ public class MainUIController implements Initializable {
 
         recordsTableView.setItems(fileModel.getData());
 
+        recordsTableView.setContextMenu(new ContextMenu(showRecordInfo));
+
         recordsTableView.setRowFactory(tv -> {
             TableRow<FileModel> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if(!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                     FileModel fileModel = row.getItem();
                     filePreviewService = new FilePreviewService(fileModel);
+                    filePreviewService.setOnSucceeded(event1 -> {
+                        recordPreviewPane = filePreviewService.getFileProcesser().getPane();
+                        previewPane.setContent(recordPreviewPane);
+                    });
                     filePreviewService.restart();
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    recordPreviewPane = filePreviewService.getFileProcesser().getPane();
-                    previewPane.setContent(recordPreviewPane);
 
-//                      NOT WORKING
-//                    while(true) {
-//                        if(filePreviewService.isRendered()) {
-//                            previewPane.setContent(filePreviewService.getFileProcesser().getPane());
-//                            break;
-//                        }
-//
-//                    }
+                } else if(!row.isEmpty() && event.getButton() == MouseButton.SECONDARY) {
+                    FileModel fileModel = row.getItem();
+                        showRecordInfo.setOnAction( e -> {
+                        Scene scene = defaultViewFactory.getRecordInfoScene(fileModel);
+                        Stage stage = new Stage();
+                        stage.setScene(scene);
+                        stage.show();
+                    });
+
                 }
             });
             return row;});
+
+
     }
-
-
 
     static class FolderSearchThreadFactory implements ThreadFactory {
 
@@ -186,7 +208,8 @@ public class MainUIController implements Initializable {
             this.type = type;
         }
 
-        @Override public Thread newThread(Runnable runnable) {
+        @Override
+        public Thread newThread(Runnable runnable) {
             Thread thread = new Thread(runnable, "LineService-" + poolNumber.getAndIncrement() + "-thread-" + type);
             thread.setDaemon(false);
 

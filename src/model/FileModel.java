@@ -10,12 +10,12 @@ import java.io.File;
  * Created by kpant on 6/26/17.
  */
 public class FileModel {
-    private File files;
     private SimpleStringProperty fileSize;
     private SimpleStringProperty fileLocation;
     private SimpleStringProperty fileName;
     private String fileToSearchIn;
     private boolean isFolder;
+
     private String aboutFileModel;
 static ObservableList<FileModel> data = FXCollections.observableArrayList();
 
@@ -88,4 +88,5 @@ static ObservableList<FileModel> data = FXCollections.observableArrayList();
                 "fileLocation=" + fileToSearchIn +
                 '}';
     }
+
 }

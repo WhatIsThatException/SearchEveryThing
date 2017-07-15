@@ -1,17 +1,16 @@
 package controller.processers;
 
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 
-import static model.MediaStatus.*;
+import static model.AudioMediaStatus.*;
 
 /**
  * Created by kpant on 7/10/17.
  */
-public final class AudioProcesser extends FileProcesser {
+public final class AudioProcesser extends FileProcesser{
     static AudioProcesser audioProcesser;
      Media media;
      MediaPlayer mediaPlayer;
@@ -23,18 +22,15 @@ public final class AudioProcesser extends FileProcesser {
         return audioProcesser;
     }
 
-    private AudioProcesser() {
-        pane = new AnchorPane();
-    }
-
     @Override
     public void processFile(String fileLocation) throws Exception {
-        switch (getMediaStatus()) {
+        switch (getAudioMediaStatus()) {
             case NOT_PLAYED:
                 playMedia(fileLocation);
                 break;
             case PLAYING:
-                /*If mediaPlayer.stop is placed after the line
+                /* TIP:
+                If mediaPlayer.stop is placed after the line
                 *  media = new Media(new File(fileLocation).toURI().toString());
                     mediaPlayer = new MediaPlayer(media);
                     then multiple music play together when multiple different row gets selected,
@@ -46,30 +42,12 @@ public final class AudioProcesser extends FileProcesser {
             default:
                 System.out.println("Audio in default case");
         }
-//            Runnable playMusic = () -> {
-//                    try {
-//                        if (getMediaStatus() == MediaStatus.NOT_PLAYED || getMediaStatus() == MediaStatus.STOPPED) {
-//                            setMediaStatus(MediaStatus.PLAYING);
-//                            mediaPlayer.play();
-//
-//                        } else if (getMediaStatus() == MediaStatus.PLAYING) {
-////                            setMediaStatus(MediaStatus.STOPPED);
-//                            mediaPlayer.stop();
-//                            throw new InterruptedException();
-//                        }
-//
-//                    }catch(InterruptedException e) {
-//                        System.out.println("Caught InterruptedException");
-//                    }
-//            };
-//            mediaPlayer.setOnReady(playMusic);
-//        pane.getChildren().add();
     }
 
     private void playMedia(String fileLocation) {
         media = new Media(new File(fileLocation).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
-        setMediaStatus(PLAYING);
+        setAudioMediaStatus(PLAYING);
     }
 }
