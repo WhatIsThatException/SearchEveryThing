@@ -10,11 +10,16 @@ public abstract class FileProcesser {
     AnchorPane pane = null;
     static Runnable runnable;
 
+    public FileProcesser() {
+        pane = new AnchorPane();
+    }
+
     boolean someFlag = false;
 
     public AnchorPane getPane() {
         return pane;
     }
+
 
     public abstract void processFile(String fileLocation) throws Exception;
 }

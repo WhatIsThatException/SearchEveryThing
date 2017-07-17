@@ -19,9 +19,6 @@ public class VideoProcesser extends FileProcesser {
     MediaPlayer mediaPlayer;
     Media media;
     MediaView mediaView;
-    public VideoProcesser() {
-        pane = new AnchorPane();
-    }
 
     @Override
     public void processFile(String fileLocation) throws Exception {
@@ -43,23 +40,22 @@ public class VideoProcesser extends FileProcesser {
 
     @Override
     public AnchorPane getPane(){
-
         return pane;
     }
+
 
     private void playVideo(String fileLocation) {
         System.out.println("VideoProcesser Thread = " + Thread.currentThread().getName());
         media = new Media(new File(fileLocation).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-        mediaView = new MediaView(mediaPlayer);
-        runnable = () -> {
-            System.out.println("Inside runnable VideoProcesser Thread = " + Thread.currentThread().getName());
-            mediaPlayer.play();
-        };
-        mediaPlayer.setOnReady(runnable);
+//        mediaPlayer.setAutoPlay(true);
+        if(mediaView == null) {
+            mediaView = new MediaView(mediaPlayer);
+        }
+        mediaView.setMediaPlayer(mediaPlayer);
+        mediaPlayer.play();
+        mediaPlayer.setOnError(() -> System.out.println("Current error: "+mediaPlayer.getError()));
         setVideoMediaStatus(PLAYING);
-
-        mediaView.setPreserveRatio(true);
         pane.getChildren().add(mediaView);
     }
 

@@ -6,34 +6,51 @@ import javafx.scene.layout.AnchorPane;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
  * Created by kpant on 7/10/17.
  */
 public class TextProcesser extends FileProcesser {
 
-    public TextProcesser() {
-        pane = new AnchorPane();
+    static TextProcesser textProcesser = null;
+
+    public static FileProcesser getTextProcesser() {
+        if(textProcesser == null)
+            textProcesser = new TextProcesser();
+        return textProcesser;
     }
 
     @Override
     public void processFile(String fileLocation) throws IOException {
         InputStream inputStream = new FileInputStream(fileLocation);
+        Scanner sc = null;
+
+        //text file: 25.1_-_Marvel_Graph.txt, size 1.5MB
+        System.out.println("Data reading started = " + new Date());
         if (inputStream != null) {
-            int b;
-            String txtData = "";
+            StringBuilder txtData = new StringBuilder("");
             try {
-                while ((b = inputStream.read()) != -1) {
-                    txtData += (char) b;
+                sc = new Scanner(inputStream, "UTF-8");
+                while (sc.hasNextLine()) {
+                    txtData.append(sc.nextLine());
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                // note that Scanner suppresses exceptions
+                if (sc.ioException() != null) {
+                    throw sc.ioException();
+                }
             } finally {
-                inputStream.close();
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (sc != null) {
+                    sc.close();
+                }
             }
-            dataToDisplay = txtData;
+            dataToDisplay = txtData.toString();
         }
-        System.out.println("TextProcesser Thread = " + Thread.currentThread().getName());
+        System.out.println("Data reading finished = " + new Date());
 
     }
 

@@ -180,6 +180,9 @@ boolean searchFinished = false;
                     filePreviewService = new FilePreviewService(fileModel);
                     filePreviewService.setOnSucceeded(event1 -> {
                         recordPreviewPane = filePreviewService.getFileProcesser().getPane();
+                        if(recordPreviewPane == null) {
+                            System.out.println("RECORDPREVIEWPANE IS NULL");
+                        }
                         previewPane.setContent(recordPreviewPane);
                     });
                     filePreviewService.restart();

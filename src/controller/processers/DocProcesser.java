@@ -15,6 +15,7 @@ public class DocProcesser extends FileProcesser {
         pane = new AnchorPane();
     }
 
+
     @Override
     public void processFile(String fileLocation) throws Exception {
         Media media = new Media(new File(fileLocation).toURI().toString());

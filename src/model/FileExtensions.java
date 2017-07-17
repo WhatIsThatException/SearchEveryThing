@@ -15,7 +15,7 @@ public enum FileExtensions implements FileExtensionInterface {
     }, TextType("TXT", "RTF", "SH", "JAVA", "PHP") {
         @Override
         public FileProcesser processFileTypeAndGetProcesser() {
-            return new TextProcesser();
+            return TextProcesser.getTextProcesser();
         }
     }, VideoType("AVI", "MP4", "FLV") {
         @Override
