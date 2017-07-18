@@ -12,15 +12,15 @@ public enum FileExtensions implements FileExtensionInterface {
         public FileProcesser processFileTypeAndGetProcesser() {
             return AudioProcesser.getAudioProcesser();
         }
-    }, TextType("TXT", "RTF", "SH") {
+    }, TextType("TXT", "RTF", "SH", "JAVA", "PHP") {
         @Override
         public FileProcesser processFileTypeAndGetProcesser() {
-            return new TextProcesser();
+            return TextProcesser.getTextProcesser();
         }
-    }, VideoType("AVI", "MP4") {
+    }, VideoType("AVI", "MP4", "FLV") {
         @Override
         public FileProcesser processFileTypeAndGetProcesser() {
-            return new VideoProcesser();
+            return VideoProcesser.getVideoProcesser();
         }
     }, DocType("PDF", "DOC") {
         @Override
@@ -33,6 +33,7 @@ public enum FileExtensions implements FileExtensionInterface {
             return new ZipProcesser();
         }
     };
+    String[] textType;
 
     private String[] listOfFileExtensions;
 

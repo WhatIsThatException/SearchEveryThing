@@ -1,31 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.*?>
-<?import java.lang.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainUIController">
-   <children>
-      <Label fx:id="searchLabel" layoutX="14.0" layoutY="14.0" onMouseClicked="#searchLabelClicked" text="Search" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-      <TextField fx:id="searchField" layoutX="62.0" layoutY="9.0" onAction="#searchFieldAction" prefHeight="25.0" prefWidth="519.0" AnchorPane.leftAnchor="62.0" AnchorPane.rightAnchor="19.0" AnchorPane.topAnchor="9.0" />
-      <TableView fx:id="recordsTableView" layoutY="100.0" minHeight="500.0" minWidth="400.0" prefHeight="285.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="100.0">
-        <columns>
-          <TableColumn fx:id="nameCol" prefWidth="135.0" text="Name" />
-          <TableColumn fx:id="sizeCol" prefWidth="45.0" text="Size" />
-            <TableColumn fx:id="locationCol" prefWidth="119.0" text="Location" />
-        </columns>
-      </TableView>
-      <CheckBox fx:id="folderCheckBox" layoutX="62.0" layoutY="46.0" mnemonicParsing="false" onAction="#folderCheckBoxAction" text="Folders" />
-      <CheckBox fx:id="fileCheckBox" layoutX="184.0" layoutY="46.0" mnemonicParsing="false" onAction="#fileCheckBoxAction" text="Files" />
-      <ScrollPane fx:id="previewPane" layoutX="322.0" layoutY="100.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="785.0" prefWidth="268.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
-        <content>
-          <AnchorPane fx:id="recordPreviewPane" minHeight="0.0" minWidth="0.0" prefHeight="274.0" prefWidth="209.0" />
-        </content>
-      </ScrollPane>
-   </children>
-   <cursor>
-      <Cursor fx:constant="DEFAULT" />
-   </cursor>
+    <children>
+        <Label fx:id="searchLabel" layoutX="17.0" layoutY="43.0" onMouseClicked="#searchLabelClicked" text="Search" AnchorPane.leftAnchor="17.0" AnchorPane.topAnchor="43.0" />
+        <TextField fx:id="searchField" layoutX="65.0" layoutY="38.0" onAction="#searchFieldAction" prefHeight="25.0" prefWidth="519.0" AnchorPane.leftAnchor="65.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="38.0" />
+        <TableView fx:id="recordsTableView" layoutY="125.0" minHeight="500.0" minWidth="263.0" prefHeight="770.0" prefWidth="263.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="337.0" AnchorPane.topAnchor="125.0">
+            <columns>
+                <TableColumn fx:id="nameCol" prefWidth="210.0" text="Name" />
+                <TableColumn fx:id="sizeCol" prefWidth="50.0" text="Size" />
+                <TableColumn fx:id="locationCol" prefWidth="500.0" text="Location" />
+            </columns>
+        </TableView>
+        <CheckBox fx:id="folderCheckBox" layoutX="65.0" layoutY="75.0" mnemonicParsing="false" onAction="#folderCheckBoxAction" text="Folders" />
+        <CheckBox fx:id="fileCheckBox" layoutX="187.0" layoutY="75.0" mnemonicParsing="false" onAction="#fileCheckBoxAction" text="Files" />
+        <ScrollPane fx:id="previewPane" layoutX="322.0" layoutY="125.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="320.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="125.0">
+            <content>
+                <AnchorPane fx:id="recordPreviewPane" minHeight="0.0" minWidth="0.0" prefHeight="767.0" prefWidth="315.0" />
+            </content>
+        </ScrollPane>
+      <MenuBar prefHeight="15.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" text="New" />
+                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem mnemonicParsing="false" text="Save As" />
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Settings" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Label layoutX="3.0" layoutY="103.0" text="Info: " AnchorPane.bottomAnchor="782.0" AnchorPane.leftAnchor="3.0" />
+      <Label layoutX="270.0" layoutY="103.0" text="More" />
+      <ToggleButton layoutX="521.0" layoutY="98.0" mnemonicParsing="false" text="PopOut" AnchorPane.bottomAnchor="777.0" AnchorPane.rightAnchor="16.0" />
+    </children>
+    <cursor>
+        <Cursor fx:constant="DEFAULT" />
+    </cursor>
 </AnchorPane>

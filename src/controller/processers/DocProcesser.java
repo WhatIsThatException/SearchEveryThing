@@ -1,6 +1,6 @@
 package controller.processers;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -12,8 +12,9 @@ import java.io.File;
 public class DocProcesser extends FileProcesser {
 
     public DocProcesser() {
-        pane = new Pane();
+        pane = new AnchorPane();
     }
+
 
     @Override
     public void processFile(String fileLocation) throws Exception {

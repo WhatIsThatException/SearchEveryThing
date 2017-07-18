@@ -14,7 +14,6 @@ import static Util.FileUtility.reverseFileName;
  */
 public class FilePreviewService extends Service<Void> {
     FileModel model;
-    private boolean isFileProcessed;
     private FileProcesser fileProcesser;
     String fileExtension = "";
 
@@ -24,9 +23,8 @@ public class FilePreviewService extends Service<Void> {
     }
 
     public FilePreviewService(FileModel model) {
-        this.isFileProcessed = false;
         this.model = model;
-        fileProcesser = FileUtility.getFileProcesser( this.fileExtension = reverseFileName(getFileExtension(model)));
+        this.fileExtension = reverseFileName(getFileExtension(model));
 
     }
 
@@ -35,7 +33,8 @@ public class FilePreviewService extends Service<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-               fileProcesser = FileUtility.getFileProcesser(fileExtension);
+                System.out.println("FIlePreviewService, createTask() Thread = " + Thread.currentThread().getName());
+               fileProcesser = FileUtility.getFileProcesserFromUtil(fileExtension);
                getFileProcesser().processFile(model.getFileLocation());
                 return null;
             }
@@ -43,10 +42,4 @@ public class FilePreviewService extends Service<Void> {
 
         };
     }
-
-
-    public boolean isFileProcessed() {
-        return isFileProcessed;
-    }
-
 }
