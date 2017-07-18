@@ -27,7 +27,7 @@ public class FilePreviewService extends Service<Void> {
     public FilePreviewService(FileModel model) {
         this.isFileProcessed = false;
         this.model = model;
-        fileProcesser = FileUtility.getFileProcesser( this.fileExtension = reverseFileName(getFileExtension(model)));
+        this.fileExtension = reverseFileName(getFileExtension(model));
 
     }
 

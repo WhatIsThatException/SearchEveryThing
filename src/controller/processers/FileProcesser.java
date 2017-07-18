@@ -13,9 +13,6 @@ public abstract class FileProcesser {
     public FileProcesser() {
         pane = new AnchorPane();
     }
-
-    boolean someFlag = false;
-
     public AnchorPane getPane() {
         return pane;
     }

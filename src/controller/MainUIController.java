@@ -39,17 +39,28 @@ public class MainUIController implements Initializable {
 
     private MenuItem showRecordInfo = new MenuItem("show Details");
     private ExecutorService fileSearchExecutor;
+    private ExecutorService filePreviewExecutor;
 
     private String[] locationsToSearch = {"/media/kpant/Transcend/","/home/kpant/Videos"};
 
     public void init(){
         fileSearchExecutor = Executors.newFixedThreadPool(locationsToSearch.length,
-                new FolderSearchThreadFactory("parallel"));
+                new FolderSearchThreadFactory("FolderSearch"));
     }
 
     public void stop() throws InterruptedException {
         fileSearchExecutor.shutdown();
         fileSearchExecutor.awaitTermination(3, TimeUnit.SECONDS);
+    }
+
+
+    private void initFilePreviewExecutors(){
+        filePreviewExecutor = Executors.newFixedThreadPool(1, new FilePreviewThreadFactory("filePreview"));
+    }
+
+    private void stopFilePreviewExecutor() throws InterruptedException {
+        filePreviewExecutor.shutdown();
+        filePreviewExecutor.awaitTermination(3, TimeUnit.SECONDS);
     }
 
     boolean folderCheckBoxOn = false;
@@ -144,6 +155,7 @@ boolean searchFinished = false;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         init();
+        initFilePreviewExecutors();
 
         for (int i = 0; i < locationsToSearch.length; i++) {
             fileModel = new FileModel(locationsToSearch[i]);
@@ -178,6 +190,7 @@ boolean searchFinished = false;
                 if(!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                     FileModel fileModel = row.getItem();
                     filePreviewService = new FilePreviewService(fileModel);
+                    filePreviewService.setExecutor(filePreviewExecutor);
                     filePreviewService.setOnSucceeded(event1 -> {
                         recordPreviewPane = filePreviewService.getFileProcesser().getPane();
                         if(recordPreviewPane == null) {
@@ -208,6 +221,23 @@ boolean searchFinished = false;
         static final AtomicInteger poolNumber = new AtomicInteger(1);
         private final String type;
         public FolderSearchThreadFactory(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public Thread newThread(Runnable runnable) {
+            Thread thread = new Thread(runnable, "LineService-" + poolNumber.getAndIncrement() + "-thread-" + type);
+            thread.setDaemon(false);
+
+            return thread;
+        }
+    }
+
+    static class FilePreviewThreadFactory implements ThreadFactory {
+
+        static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final String type;
+        public FilePreviewThreadFactory(String type) {
             this.type = type;
         }
 
