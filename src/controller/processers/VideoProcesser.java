@@ -53,6 +53,7 @@ public class VideoProcesser extends FileProcesser {
             mediaView = new MediaView(mediaPlayer);
         }
         mediaView.setMediaPlayer(mediaPlayer);
+        mediaView.setPreserveRatio(true);
         mediaPlayer.play();
         mediaPlayer.setOnError(() -> System.out.println("Current error: "+mediaPlayer.getError()));
         setVideoMediaStatus(PLAYING);

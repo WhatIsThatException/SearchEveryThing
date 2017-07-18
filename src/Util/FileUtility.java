@@ -68,7 +68,7 @@ public class FileUtility {
         return str.substring(0, str.indexOf("."));
     }
 
-    public static FileProcesser getFileProcesser(String fileExtension) {
+    public static FileProcesser getFileProcesserFromUtil(String fileExtension) {
         FileProcesser fileProcesser = null;
         for (FileExtensions extensions : FileExtensions.values()) {
             if (fileProcesser == null)
